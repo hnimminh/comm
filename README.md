@@ -29,7 +29,7 @@
 
 ## Operation Theory
 <p align="center">
-	<img width="800" alt="operation-theory" src="https://user-images.githubusercontent.com/58973699/134817014-4106729a-5fc3-4b43-ab64-86a9cf275fbe.png">
+	<img width="800" alt="comm-architecture-operation-theory" src="https://user-images.githubusercontent.com/58973699/134817246-c08bbf89-b851-4735-9a2d-a560faafdfa1.png">
 </p>
 
 ## Disclaimer
