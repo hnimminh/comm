@@ -29,7 +29,7 @@
 
 ## Operation Theory
 <p align="center">
-	<img width="800" alt="operation-theory" src="https://user-images.githubusercontent.com/58973699/133099308-6f494231-899d-46f2-90d1-5a9070c33447.png">
+	<img width="800" alt="operation-theory" src="https://user-images.githubusercontent.com/58973699/134817014-4106729a-5fc3-4b43-ab64-86a9cf275fbe.png">
 </p>
 
 ## Disclaimer
