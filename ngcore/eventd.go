@@ -1,4 +1,4 @@
-package main
+package ngcore
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"github.com/hnimminh/comm/pkg/fsesl"
 )
 
-func main(){
+func Eventd(){
 	conn, err := fsesl.Dial("127.0.0.1:8021", "ramdomstr")
 	if err != nil {
 		log.Fatal(err)

@@ -1,4 +1,4 @@
-package main
+package ngcore
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 
 const audioFile = "/opt/media/BigGirlsCry-Sia-1630748496.wav"
 
-func main() {
+func Server() {
 	fsesl.ListenAndServe("127.0.0.1:9021", handler)
 }
 
