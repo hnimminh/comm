@@ -1,12 +1,13 @@
-/******************************************************************
-*
-* Origin author: Fiorix
-* Maintainer: Minh Minh
-* Reference:
-* 	http://wiki.freeswitch.org/wiki/Event_Socket
-* 	http://wiki.freeswitch.org/wiki/Event_Socket_Outbound
-*
-*******************************************************************/
+/********************************************************************************
+*																				*
+* Origin author: Fiorix															*
+* Maintainer: Minh Minh															*
+* There are major change in the code for performanace and nature design.		*
+* Reference:																	*
+* 	http://wiki.freeswitch.org/wiki/Event_Socket								*
+* 	http://wiki.freeswitch.org/wiki/Event_Socket_Outbound						*
+*																				*
+*********************************************************************************/
 package fsesl
 
 import (
