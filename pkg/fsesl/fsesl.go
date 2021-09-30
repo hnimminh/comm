@@ -219,9 +219,9 @@ func (h *Connection) readOne() bool {
 			h.err <- err
 			return false
 		}
-		// capitalize header keys for consistency.
+
 		for k, v := range tmp {
-			resp.Header[capitalize(k)] = v
+			resp.Header[k] = v
 		}
 		if v, _ := resp.Header["_body"]; v != nil {
 			resp.Body = v.(string)
@@ -269,14 +269,12 @@ func (h *Connection) ReadEvent() (*Event, error) {
 }
 
 // copyHeaders copies all keys and values from the MIMEHeader to Event.Header,
-// normalizing header keys to their capitalized version and values by
-// unescaping them when decode is set to true.
+// normalizing header keys to their values byvunescaping them when decode is set to true.
 //
 // It's used after parsing plain text event headers, but not JSON.
 func copyHeaders(src *textproto.MIMEHeader, dst *Event, decode bool) {
 	var err error
 	for k, v := range *src {
-		k = capitalize(k)
 		if decode {
 			dst.Header[k], err = url.QueryUnescape(v[0])
 			if err != nil {
@@ -288,32 +286,6 @@ func copyHeaders(src *textproto.MIMEHeader, dst *Event, decode bool) {
 	}
 }
 
-// capitalize capitalizes strings in a very particular manner.
-// Headers such as Job-UUID become Job-Uuid and so on. Headers starting with
-// Variable_ only replace ^v with V, and headers staring with _ are ignored.
-func capitalize(s string) string {
-	if s[0] == '_' {
-		return s
-	}
-	ns := bytes.ToLower([]byte(s))
-	if len(s) > 9 && s[1:9] == "ariable_" {
-		ns[0] = 'V'
-		return string(ns)
-	}
-	toUpper := true
-	for n, c := range ns {
-		if toUpper {
-			if 'a' <= c && c <= 'z' {
-				c -= 'a' - 'A'
-			}
-			ns[n] = c
-			toUpper = false
-		} else if c == '-' || c == '_' {
-			toUpper = true
-		}
-	}
-	return string(ns)
-}
 
 // Send sends a single command to the server and returns a response Event.
 //
