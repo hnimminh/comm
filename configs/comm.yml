@@ -2,13 +2,10 @@ freeswitch:
   confdir: /usr/local/etc/freeswitch
   binfile: /usr/local/bin/freeswitch
 
-tcpsocket:
-  listen: 127.0.0.1
-  port: 9021
 httpapi:
-  listen: 127.0.0.2
+  ipaddr: 127.0.0.2
   port: 8443
 
-lannets:
+acls:
   - 10.0.0.0/8
   - 172.16.0.0/12

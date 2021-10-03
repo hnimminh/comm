@@ -7,5 +7,6 @@ import (
 
 
 func main() {
+	ngcore.Engine()
 	ngcore.Eventd()
 }
