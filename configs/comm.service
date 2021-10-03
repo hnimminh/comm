@@ -1,0 +1,18 @@
+[Unit]
+Description=Comm Deamon - Open-Source Programmable Voice
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/opt/comm
+ExecStart=/opt/comm/comm
+
+TimeoutSec=30s
+RemainAfterExit=no
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
