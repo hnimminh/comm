@@ -1,3 +1,12 @@
+package ngcore
+
+import (
+    "fmt"
+		"os"
+		"os/exec"
+)
+
+const FSXML = `
 <?xml version="1.0"?>
 <document type="freeswitch/xml">
   <X-PRE-PROCESS cmd="set" data="dblocation=/dev/shm"/>
@@ -8,11 +17,8 @@
     <!-- ACL ACCESS CONTROL LIST -->
     <configuration name="acl.conf" description="Network Lists">
       <network-lists>
-        <list name="LOPRINET" default="deny">
-          <node type="allow" cidr="127.0.0.0/8"/>
-          <node type="allow" cidr="10.0.0.0/8"/>
-          <node type="allow" cidr="172.16.0.0/12"/>
-          <node type="allow" cidr="192.168.0.0/16"/>
+        <list name="WHITE.ACL.LIST" default="deny">
+          <node type="allow" cidr="0.0.0.0/0"/>
         </list>
       </network-lists>
     </configuration>
@@ -166,21 +172,70 @@
   <section name="dialplan" description="Regex/XML Dialplan">
     <context name="redirected">
       <extension name="any_to_any">
-        <condition field="destination_number" expression="^.+$">
-          <action application="socket" data="$${commserver} async full"/>
+        <condition regex="all">
+          <regex field="${acl(${network_addr} WHITE.ACL.LIST)}" expression="true"/>
+          <regex field="destination_number" expression="."/>
+          <action application="sched_hangup" data="+3600 ALLOTTED_TIMEOUT"/>
+          <action application="park"/>
           <anti-action application="hangup" data="CALL_REJECTED"/>
+          <anti-action application="log" data="WARNING: YOU SHOULD NOT FOUND THIS MESSAGE - THE THING WENT WRONG"/>
         </condition>
       </extension>
     </context>
     <context name="default">
       <extension name="any_to_any">
-        <condition field="destination_number" expression="^.+$">
-          <action application="socket" data="$${commserver} async full"/>
+        <condition regex="all">
+          <regex field="${acl(${network_addr} WHITE.ACL.LIST)}" expression="true"/>
+          <regex field="destination_number" expression="."/>
+          <action application="sched_hangup" data="+3600 ALLOTTED_TIMEOUT"/>
+          <action application="park"/>
           <anti-action application="hangup" data="CALL_REJECTED"/>
-          <anti-action application="log" data="WARNING: YOU SHOULD NOT FOUND THIS MESSAGE - CHECK THE FIREWALL"/>
+          <anti-action application="log" data="WARNING: YOU SHOULD NOT FOUND THIS MESSAGE - THE THING WENT WRONG"/>
         </condition>
       </extension>
     </context>
   </section>
   <!-- END: DIALPLAN SECTION -->
 </document>
+`
+
+func Engine() {
+		/*
+    data, err := ioutil.ReadFile("../configs/freeswitch.xml")
+    if err != nil {
+        fmt.Println("File reading error", err)
+		fmt.Println("--------------------------------------------------------------------------", string(FSXML))
+        return
+    }
+    fmt.Println("Contents of file:", string(data))
+		*/
+
+		// create file
+    f, err := os.Create("/usr/local/etc/freeswitch/freeswitch.xml")
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+		// write string
+    l, err := f.WriteString(FSXML)
+    if err != nil {
+        fmt.Println(err)
+        f.Close()
+        return
+    }
+		// close the file
+    fmt.Println(l, "bytes /usr/local/etc/freeswitch/freeswitch.xml written successfully")
+    err = f.Close()
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+
+		// start freeswitch
+    fscmd := exec.Command("/usr/local/bin/freeswitch", "-nc")
+    err = fscmd.Run()
+    if err != nil {
+			fmt.Println(err)
+    }
+		fmt.Println(l, "start freeswitch")
+}
